@@ -1,20 +1,20 @@
 <form #userForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
         <label for="name">Имя</label>
-        <input type="text" id="name" class="form-control" name="name" required minlength="4" maxlength="10"
-            [(ngModel)]="model.name" #name="ngModel">
-        <div class="alert alert-danger" *ngIf="name.invalid && (name.dirty || name.touched)">
-            <div *ngIf="name.errors && name.errors.required"> Имя обязательно</div>
-            <div *ngIf="name.errors && name.errors.minlength"> Имя должно cодержать минимум 4 символа</div>
+        <input type="text" id="name" class="form-control" name="name" placeholder="Имя" required minlength="4"
+            maxlength="10" [(ngModel)]="model.name" #name="ngModel">
+        <div class="alert alert-danger" *ngIf="formErrors.name">
+            {{formErrors.name}}
         </div>
     </div>
 
-    
+
     <div class="mb-3">
         <label for="age">Возраст</label>
-        <input type="number" id="age" class="form-control" name="age" required [(ngModel)]="model.age" #age="ngModel">
-        <div class="alert alert-danger" *ngIf="age.invalid && (age.dirty || age.touched)">
-            Возраст обязателен
+        <input type="number" id="age" class="form-control" name="age" placeholder="Возраст" required
+            [(ngModel)]="model.age" #age="ngModel">
+        <div class="alert alert-danger" *ngIf="formErrors.age">
+            {{formErrors.age}}
         </div>
     </div>
 
