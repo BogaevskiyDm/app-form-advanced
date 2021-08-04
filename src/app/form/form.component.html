@@ -1,4 +1,4 @@
-<form #userForm = "ngForm">
+<form #userForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
         <label for="name">Имя</label>
         <input type="text" id="name" class="form-control" name="name" required minlength="4" maxlength="10"
@@ -9,6 +9,7 @@
         </div>
     </div>
 
+    
     <div class="mb-3">
         <label for="age">Возраст</label>
         <input type="number" id="age" class="form-control" name="age" required [(ngModel)]="model.age" #age="ngModel">
@@ -16,7 +17,7 @@
             Возраст обязателен
         </div>
     </div>
-    
+
     <div class="mb-3">
         <label for="role">Роль</label>
         <select name="role" id="role" class="form-select" required [(ngModel)]="model.role">
@@ -26,7 +27,7 @@
     </div>
 
     <div class="mb-3">
-        <button [disabled] (click)="onSubmit()" class="btn btn-info">Сохранить</button>
+        <button [disabled]="userForm.form.invalid" class="btn btn-info">Сохранить</button>
     </div>
 </form>
 
