@@ -8,16 +8,16 @@ import { User } from '../user.class';
 })
 export class FormComponent implements OnInit {
 
-  roles:string[] = ['Гость', 'Модератор','Администратор'];
-  model: User = new User(1,'','',null)
+  roles: string[] = ['Гость', 'Модератор', 'Администратор'];
+  model: User = new User(1, '', '', null)
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  get diagnostic(): string{
-    return JSON.stringify(this.model);
+  onSubmit(): void {
+    console.log('Form submitted');
   }
 
 }
