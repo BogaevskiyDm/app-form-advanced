@@ -65,7 +65,10 @@
 // }
 
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { emailValidator, rangeValidator } from '../custom.validators';
+import { User } from '../user.class';
+
 
 @Component({
   selector: 'app-form',
@@ -74,14 +77,80 @@ import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 })
 export class FormComponent implements OnInit {
 
-  userForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    password: new FormControl('', [Validators.required, Validators.minLength(7)])
-  })
+  userForm!: FormGroup;
+  roles: string[] = ['Гость', 'Модератор', 'Администратор'];
+  user: User = new User(1, '', null, null, null, null);
+
+  formErrors: any = {
+    name: '',
+    password: '',
+    email: '',
+    role: '',
+    age: ''
+  }
+
+  validationMessenges: any = {
+    name: {
+      required: 'Имя обязательно',
+      minlength: 'Имя должно cодержать минимум 4 символа',
+      maxLength: 'Имя должно cодержать максимум 4 символа'
+    },
+    age: {
+      required: 'Возраст обязателен',
+      rangeValidator: 'Значение должно быть числом в диапазоне 18..122'
+    },
+    password: {
+      required: 'Пароль обязателен',
+      minlength: 'Пароль должен cодержать минимум 7 символов',
+      maxLength: 'Пароль должун cодержать максимум 25 символа'
+    },
+    email: {
+      required: 'Email обязателен',
+      emailValidator: 'Неправильный формат Email адреса'
+    },
+    role: {
+      required: 'Обязательное поле'
+    }
+  }
+ 
+  constructor(private formBilder: FormBuilder) { }
 
   ngOnInit(): void {
-
+    this.bildForm();
   }
+  private bildForm(): void {
+    this.userForm = this.formBilder.group({
+      name: [this.user.name, [Validators.required, Validators.minLength(4), Validators.maxLength(15)]],
+      password: [this.user.password, [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
+      email: [this.user.email, [Validators.required, emailValidator]],
+      age: [this.user.age, [Validators.required, rangeValidator(18,122)]],
+      role: [this.user.role, Validators.required]
+    })
+
+    this.userForm.valueChanges.subscribe(() => this.onValueChanged())
+  }
+  private onValueChanged(): void {
+
+    if (!this.userForm) { return; }
+
+    const form: any = this.userForm;
+
+    for (const field in this.formErrors) {
+      this.formErrors[field] = '';
+      const control = form.get(field);
+
+      if (control && control.dirty && control.invalid) {
+        const message = this.validationMessenges[field];
+
+        for (const key in control.errors) {
+          console.log(message[key]);
+          this.formErrors[field] = message[key];
+          break;
+        }
+      }
+    }
+  }
+
   onSubmit(form: FormGroup): void {
     console.log(form.valid);
     console.log(form.value);
